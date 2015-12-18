@@ -5,4 +5,4 @@ import { WorldMap } from './components/WorldMap';
 
 ReactDOM.render(
   <WorldMap/>, document.querySelector('#app')
-)
+);
