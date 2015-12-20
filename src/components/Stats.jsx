@@ -14,7 +14,6 @@ export default React.createClass({
     player: React.PropTypes.object,
   },
   render() {
-    console.log(this.props);
     return (
       <div style={
              Object.assign({}, styles.stats, {
