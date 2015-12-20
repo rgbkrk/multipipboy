@@ -36,7 +36,7 @@ export class WorldMap extends React.Component {
           this.props.players.map((player) => {
             return (
               <Player name={player.name}
-                      color={'#' + Math.floor(Math.random() * 16777215).toString(16)}
+                      color={player.color}
                       x={player.x}
                       y={player.y}
                       mapSize={2048}

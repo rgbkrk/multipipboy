@@ -1,16 +1,27 @@
 const http = require('http');
 
-const startingPlayers = [
-  { name: 'Daryl Johnson', x: 128, y: 120 },
-  { name: 'Lucky Duck', x: 450, y: 520 },
-  { name: 'Ayana Smith', x: 1028, y: 200 },
-];
+const codsworthNames = require('codsworth-names');
+const adjectives = require('./adjectives');
 
+const mapSize = 2048;
+
+// Grab all the names that Codsworth can pronounce, give them an adjective
+const startingPlayers = codsworthNames.map((name) => {
+  const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+  return {
+    name: `${adjective} ${name}`,
+    x: Math.round(Math.random() * mapSize),
+    y: Math.round(Math.random() * mapSize),
+    color: '#' + Math.floor(Math.random() * 16777215).toString(16),
+  };
+});
+
+// Random walk -1, 0, 1
 function walk(pt) {
   const change = Math.cos(Math.PI * Math.round(Math.random())) // -1 or 1
                  * Math.round(Math.random()); // 0 or 1
   const newPt = pt + change;
-  if (newPt < 0 || newPt >= 2048) {
+  if (newPt < 0 || newPt >= mapSize) {
     return pt;
   }
   return newPt;
@@ -43,4 +54,5 @@ const PORT = process.env.PORT || 8090;
 
 server.listen(PORT, () => {
   console.log(`Listening on ${PORT}`);
+  console.log('# of players: ', startingPlayers.length);
 });
