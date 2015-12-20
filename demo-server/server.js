@@ -1,4 +1,5 @@
 const http = require('http');
+const uuid = require('node-uuid');
 
 const codsworthNames = require('codsworth-names');
 const adjectives = require('./adjectives');
@@ -13,6 +14,7 @@ const startingPlayers = codsworthNames.map((name) => {
     x: Math.round(Math.random() * mapSize),
     y: Math.round(Math.random() * mapSize),
     color: '#' + Math.floor(Math.random() * 16777215).toString(16),
+    id: uuid.v4(),
   };
 });
 

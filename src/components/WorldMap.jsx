@@ -40,7 +40,7 @@ export class WorldMap extends React.Component {
                       x={player.x}
                       y={player.y}
                       mapSize={2048}
-                      key={player.name}
+                      key={player.id}
               />
             );
           })
