@@ -10,14 +10,19 @@ const styles = {
     width: '100%',
   },
   worldMapImage: {
-    /* height: '100%',
-    width: '100%', */
+    height: '100%',
+    width: '100%',
     zIndex: -1,
   },
 };
 
-export const WorldMap = React.createClass({
-  displayName: 'WorldMap',
+export class WorldMap extends React.Component {
+  static displayName = 'WorldMap';
+
+  static propTypes = {
+    players: React.PropTypes.any,
+  }
+
   render() {
     return (
       <div width='100%' style={styles.worldMap}>
@@ -27,17 +32,20 @@ export const WorldMap = React.createClass({
           style={styles.worldMapImage}
           alt='World Map'
         />
-        <Player color='#00ff00'
-                x={970}
-                y={170}
-                mapSize={2048}
-                />
-        <Player color='#ff0000'
-                x={960}
-                y={173}
-                mapSize={2048}
-                />
+        {
+          this.props.players.map((player) => {
+            return (
+              <Player name={player.name}
+                      color={'#' + Math.floor(Math.random() * 16777215).toString(16)}
+                      x={player.x}
+                      y={player.y}
+                      mapSize={2048}
+                      key={player.name}
+              />
+            );
+          })
+        }
       </div>
     );
-  },
-});
+  }
+}

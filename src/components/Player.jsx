@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const DEFAULT_PLAYER_SIZE = 2;
+const DEFAULT_PLAYER_SIZE = 6;
 
 const styles = {
   dot: {
@@ -27,11 +27,9 @@ export default React.createClass({
       orientation: 0,
       x: 0,
       y: 0,
-      size: 2,
+      mapSize: 2048,
+      size: DEFAULT_PLAYER_SIZE,
     };
-  },
-  displayStats() {
-    console.log(this.props.name);
   },
   render() {
     return (
@@ -43,8 +41,7 @@ export default React.createClass({
                width: this.props.size,
                height: this.props.size,
                backgroundColor: this.props.color,
-             })}
-           onMouseOver={this.displayStats}>
+             })}>
       </div>
     );
   },
