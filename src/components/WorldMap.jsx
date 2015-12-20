@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Player from './Player';
+import Stats from './Stats';
 
 const styles = {
   worldMap: {
@@ -20,12 +21,25 @@ export class WorldMap extends React.Component {
   static displayName = 'WorldMap';
 
   static propTypes = {
-    players: React.PropTypes.any,
+    players: React.PropTypes.array,
+  }
+
+  playerHovered(player) {
+    this.setState({
+      hoveredPlayer: player,
+    });
   }
 
   render() {
     return (
       <div width='100%' style={styles.worldMap}>
+        { (this.state && this.state.hoveredPlayer) ?
+            <Stats
+              player={this.state.hoveredPlayer}
+              mapSize={2048}
+              /> :
+          null
+        }
         <img
           ref='worldmap'
           src='CompanionWorldMap.png'
@@ -41,6 +55,7 @@ export class WorldMap extends React.Component {
                       y={player.y}
                       mapSize={2048}
                       key={player.id}
+                      onMouseOver={this.playerHovered.bind(this, player)}
               />
             );
           })

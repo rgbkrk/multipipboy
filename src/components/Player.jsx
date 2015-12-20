@@ -15,6 +15,7 @@ export default React.createClass({
     color: React.PropTypes.string,
     mapSize: React.PropTypes.number,
     name: React.PropTypes.string,
+    onMouseOver: React.PropTypes.func,
     orientation: React.PropTypes.number,
     size: React.PropTypes.number,
     x: React.PropTypes.number,
@@ -41,7 +42,8 @@ export default React.createClass({
                width: this.props.size,
                height: this.props.size,
                backgroundColor: this.props.color,
-             })}>
+             })}
+            onMouseOver={this.props.onMouseOver}>
       </div>
     );
   },
