@@ -24,6 +24,7 @@ const events = Rx.DOM.fromEventSource('http://127.0.0.1:8090', opener())
                        return [];
                      })
                      .filter(x => x !== [])
+                     .throttle(17) // Little bit under 60fps
                      .distinctUntilChanged();
 
 const WorldMapContainer = withStore(events, 'players')(WorldMap);
