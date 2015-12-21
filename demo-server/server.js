@@ -1,4 +1,11 @@
-const http = require('http');
+/* eslint no-plusplus: 0 */
+
+import Rx from 'rx';
+
+const debug = require('debug');
+const forwarded = require('forwarded-for');
+const sio = require('socket.io');
+
 const uuid = require('node-uuid');
 
 const codsworthNames = require('codsworth-names');
@@ -17,9 +24,7 @@ function newPlayer(name) {
 }
 
 // Grab all the names that Codsworth can pronounce, give them an adjective
-const startingPlayers = codsworthNames.map(newPlayer)
-                                      .concat(codsworthNames.map(newPlayer))
-                                      .concat(codsworthNames.map(newPlayer));
+const startingPlayers = codsworthNames.map(newPlayer);
 
 // Random walk -1, 0, 1
 function walk(pt) {
@@ -36,31 +41,34 @@ const gameState = {
   players: startingPlayers,
 };
 
-const server = http.createServer((req, res) => {
-  res.writeHead(200, {
-    'Content-Type': 'text/event-stream',
-    'Cache-Control': 'no-cache',
-    'Connection': 'keep-alive',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
-  });
-  res.write('\n');
+const fakeEvents = Rx.Observable.create((observer) => {
   setInterval(() => {
-    res.write(`data: ${JSON.stringify(gameState.players)}\n\n`);
+    gameState.players = gameState.players.map(
+      player => Object.assign(player, {
+        x: walk(player.x),
+        y: walk(player.y),
+      }));
+    observer.onNext(gameState.players);
   }, 10);
 });
 
-setInterval(() => {
-  gameState.players = gameState.players.map(
-    player => Object.assign(player, {
-      x: walk(player.x),
-      y: walk(player.y),
-    }));
-}, 10);
-
 const PORT = process.env.PORT || 8090;
+const uid = process.env.MAPPY_SERVER_UID || uuid.v4();
+debug('server uid %s', uid);
 
-server.listen(PORT, () => {
-  console.log(`Listening on ${PORT}`);
-  console.log('# of players: ', startingPlayers.length);
+const io = sio(PORT);
+io.on('connection', (socket) => {
+  const req = socket.request;
+  const ip = forwarded(req, req.headers);
+  debug('client ip %s', ip);
+
+  fakeEvents.subscribe((data) => {
+    socket.emit('mappy:data', data);
+  },
+  (err) => {
+    console.error(err);
+  },
+  () => {
+    console.log('events closed');
+  });
 });
