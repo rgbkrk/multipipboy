@@ -9,10 +9,8 @@ const mapSize = 2048;
 function newPlayer(name) {
   const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
   return {
-    name: `${adjective} ${name}`,
     x: Math.round(Math.random() * mapSize),
     y: Math.round(Math.random() * mapSize),
-    color: '#' + Math.floor(Math.random() * 16777215).toString(16),
     id: uuid.v4(),
   };
 }

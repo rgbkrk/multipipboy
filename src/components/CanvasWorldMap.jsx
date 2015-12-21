@@ -47,7 +47,7 @@ export class CanvasWorldMap extends React.Component {
     }
 
     this.props.players.map((player) => {
-      context.fillStyle = player.color;
+      context.fillStyle = '#' + player.id.slice(0, 6);
       context.fillRect(player.x, player.y, 2, 2);
     });
     context.restore();
