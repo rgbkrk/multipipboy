@@ -18,7 +18,33 @@ function newPlayer(name) {
 }
 
 // Grab all the names that Codsworth can pronounce, give them an adjective
-const startingPlayers = codsworthNames.map(newPlayer).concat(codsworthNames.map(newPlayer));
+const startingPlayers = codsworthNames.map(newPlayer)
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer));
 
 // Random walk -1, 0, 1
 function walk(pt) {
