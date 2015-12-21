@@ -12,13 +12,38 @@ function newPlayer(name) {
     name: `${adjective} ${name}`,
     x: Math.round(Math.random() * mapSize),
     y: Math.round(Math.random() * mapSize),
-    color: '#' + Math.floor(Math.random() * 16777215).toString(16),
     id: uuid.v4(),
   };
 }
 
 // Grab all the names that Codsworth can pronounce, give them an adjective
-const startingPlayers = codsworthNames.map(newPlayer).concat(codsworthNames.map(newPlayer));
+const startingPlayers = codsworthNames.map(newPlayer)
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer))
+                                      .concat(codsworthNames.map(newPlayer));
 
 // Random walk -1, 0, 1
 function walk(pt) {
@@ -31,6 +56,10 @@ function walk(pt) {
   return newPt;
 }
 
+const gameState = {
+  players: startingPlayers,
+};
+
 const server = http.createServer((req, res) => {
   res.writeHead(200, {
     'Content-Type': 'text/event-stream',
@@ -40,19 +69,18 @@ const server = http.createServer((req, res) => {
     'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
   });
   res.write('\n');
-
-  let players = startingPlayers;
-
   setInterval(() => {
-    players = players.map(
-      player => Object.assign(player, {
-        x: walk(player.x),
-        y: walk(player.y),
-      })
-    );
-    res.write(`data: ${JSON.stringify(players)}\n\n`);
-  }, 100);
+    res.write(`data: ${JSON.stringify(gameState.players)}\n\n`);
+  }, 10);
 });
+
+setInterval(() => {
+  gameState.players = gameState.players.map(
+    player => Object.assign(player, {
+      x: walk(player.x),
+      y: walk(player.y),
+    }));
+}, 10);
 
 const PORT = process.env.PORT || 8090;
 
