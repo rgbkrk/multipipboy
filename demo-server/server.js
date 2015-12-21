@@ -6,8 +6,7 @@ const adjectives = require('./adjectives');
 
 const mapSize = 2048;
 
-// Grab all the names that Codsworth can pronounce, give them an adjective
-const startingPlayers = codsworthNames.map((name) => {
+function newPlayer(name) {
   const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
   return {
     name: `${adjective} ${name}`,
@@ -16,7 +15,10 @@ const startingPlayers = codsworthNames.map((name) => {
     color: '#' + Math.floor(Math.random() * 16777215).toString(16),
     id: uuid.v4(),
   };
-});
+}
+
+// Grab all the names that Codsworth can pronounce, give them an adjective
+const startingPlayers = codsworthNames.map(newPlayer).concat(codsworthNames.map(newPlayer));
 
 // Random walk -1, 0, 1
 function walk(pt) {
