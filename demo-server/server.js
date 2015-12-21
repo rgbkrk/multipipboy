@@ -9,6 +9,7 @@ const mapSize = 2048;
 function newPlayer(name) {
   const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
   return {
+    name: `${adjective} ${name}`,
     x: Math.round(Math.random() * mapSize),
     y: Math.round(Math.random() * mapSize),
     id: uuid.v4(),
@@ -55,6 +56,10 @@ function walk(pt) {
   return newPt;
 }
 
+const gameState = {
+  players: startingPlayers,
+};
+
 const server = http.createServer((req, res) => {
   res.writeHead(200, {
     'Content-Type': 'text/event-stream',
@@ -64,19 +69,18 @@ const server = http.createServer((req, res) => {
     'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
   });
   res.write('\n');
-
-  let players = startingPlayers;
-
   setInterval(() => {
-    players = players.map(
-      player => Object.assign(player, {
-        x: walk(player.x),
-        y: walk(player.y),
-      })
-    );
-    res.write(`data: ${JSON.stringify(players)}\n\n`);
-  }, 100);
+    res.write(`data: ${JSON.stringify(gameState.players)}\n\n`);
+  }, 10);
 });
+
+setInterval(() => {
+  gameState.players = gameState.players.map(
+    player => Object.assign(player, {
+      x: walk(player.x),
+      y: walk(player.y),
+    }));
+}, 10);
 
 const PORT = process.env.PORT || 8090;
 
