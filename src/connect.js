@@ -2,6 +2,13 @@ import Rx from 'rx';
 import { DOM } from 'rx-dom';
 Rx.DOM = DOM;
 
+/**
+ * Creates an observable connected to `url` with multiplayer data from that
+ * endpoint if available. Will perform exponential back-off if the connection
+ * goes out.
+ * @param {string} url - URL of an EventSource stream
+ * @return {Observable} - stream of multiplayer data
+ */
 export default function connect(url) {
   return Rx.DOM
     .fromEventSource(url)
