@@ -2,7 +2,7 @@
 
 > This is not the greatest game in the world, this is just a prototype.
 
-![Mmmmmmm dawts](https://cloud.githubusercontent.com/assets/836375/11960015/2a2465ee-a896-11e5-9e5b-761f7996a536.gif)
+![yay for dots](https://cloud.githubusercontent.com/assets/836375/11960060/5b49ac9c-a896-11e5-8e50-da9ce4330e1d.gif)
 
 ## Development
 
