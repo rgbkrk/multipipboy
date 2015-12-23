@@ -27,7 +27,8 @@
   "env": {
     "browser": true,
     "node": true,
-    "mocha": true
+    "mocha": true,
+    "jasmine": true
   },
   "parser": "babel-eslint",
   "plugins": [
@@ -209,7 +210,7 @@
     "max-params": 0,
     "max-statements": 0,
     "no-bitwise": 1,
-    "no-plusplus": 1,
+    "no-plusplus": [2, {allowForLoopAfterthoughts: true}],
 
     /* Babel */
     // "babel/block-scoped-var": 1,

@@ -1,43 +1,60 @@
-import { List, Map } from "immutable";
+import { List, Map } from 'immutable';
 
-const players = new Map();
-const playerCoors = new Array(2048 * 2048).map(() => new List());
+export const DEFAULT_WIDTH = 2048;
+export const DEFAULT_HEIGHT = 2048;
 
-function cantorPairing(x, y) {
-  return 0.5 * (x + y) * (x + y + 1) + y;
-}
+export class PlayerStore {
+    constructor(width = DEFAULT_WIDTH, height = DEFAULT_HEIGHT) {
+      this.width = width;
+      this.height = height;
 
-class CantorSearch {
-  constructor() {
-    this.players = new Map();
-    this.playerCoors = new Array(2048 * 2048).map(() => new List());
-  }
+      // UID -> Player data
+      this.players = new Map();
 
-  set(id, data) {
-    this.players = this.players.set(id, {
-      position: null,
-      data
-    });
-  }
-  
-  get(id) {
-    return this.players.get(id).data;
-  }
-  
-  setPosition(id, _x, _y) {
-    const player = this.players.get(id);
-  
-    const pos = player.position;
-    const newPos = cantorPairing(_x, _y);
-  
-    this.playerCoors[pos] = this.playerCoors[pos].filter(x => x !== id);
-    this.playerCoors[newPos] = this.playerCoors[newPos].push(id);
-  
-    player.position = newPos;
-  }
+      // position -> List(uids...)
+      this.playerGrid = new Array(this.width * this.height);
+      // There's a fun fact in here about .map() on new empty arrays
+      for (let i = 0; i < this.playerGrid.length; i++) {
+        this.playerGrid[i] = new List();
+      }
+    }
 
-  getPosition(x, y) {
-    const pos = cantorPairing(x, y);
-    return this.playerCoors[pos];
-  }
+    index(x, y) {
+      return this.width * y + x;
+    }
+
+    set(id, playerData) {
+      if(!playerData.hasOwnProperty('x') || !playerData.hasOwnProperty('y')) {
+        throw new Error('x and y must be set on player data');
+      }
+
+      // If we had an old position, remove it from the playerGrid
+      // One optimization not done here - if the old position and the new position
+      // are the same, don't update either of them
+      if (this.players.has(id)) {
+        const original = this.players.get(id);
+        const pos = this.index(original.x, original.y);
+        this.playerGrid[pos] = this.playerGrid[pos].filter(x => x !== id);
+      }
+
+      this.players = this.players.set(id, playerData);
+
+      const newPos = this.index(playerData.x, playerData.y);
+      this.playerGrid[newPos] = this.playerGrid[newPos].push(id);
+    }
+
+    lookupPlayer(id) {
+      return this.players.get(id);
+    }
+
+    inhabitants(x, y) {
+      const pos = this.index(x, y);
+      return this.playerGrid[pos];
+    }
+
+    inspect() {
+      return {
+        players: this.players,
+      };
+    }
 }
