@@ -2,12 +2,14 @@ import React from 'react';
 
 const MAP_SIZE = 2048;
 
+import { index } from '../player-model';
+
 export class WorldMap extends React.Component {
   static displayName = 'CanvasWorldMap';
 
   static propTypes = {
+    playerGrid: React.PropTypes.any,
     players: React.PropTypes.any,
-    // mapData: React.PropTypes.any,
   }
 
   componentDidMount() {
@@ -34,7 +36,11 @@ export class WorldMap extends React.Component {
   }
 
   mouseMoved(evt) {
-    console.log(evt.clientX, evt.clientY);
+    const pos = index(evt.clientX, evt.clientY);
+    const players = this.props.playerGrid[pos];
+    players.forEach(playerID => {
+      console.log(this.props.players.get(playerID));
+    });
   }
 
   paint(context) {
@@ -58,7 +64,7 @@ export class WorldMap extends React.Component {
             width={MAP_SIZE}
             height={MAP_SIZE}
             ref={(c) => this.canvas = c}
-            onMouseMove={this.mouseMoved}
+            onMouseMove={this.mouseMoved.bind(this)}
             />;
   }
 }
