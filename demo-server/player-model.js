@@ -46,7 +46,7 @@ export class PlayerStore {
         // We'll use who's on top (?) for the color here
         color = this.get(players.last()).color;
       }
-      color.copy(this.imageBuffer, pixelPos, pixelPos + 4);
+      color.copy(this.imageBuffer, pixelPos, 0);
     }
 
     set(id, playerData) {
