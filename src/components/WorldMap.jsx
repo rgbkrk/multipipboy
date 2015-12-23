@@ -57,7 +57,7 @@ export class WorldMap extends React.Component {
     ).flatten().map(id => this.props.players.get(id));
 
     if (! players.isEmpty()) {
-      console.log(players.toArray());
+      console.log(players.toArray().map(p => p.name));
     }
 
   }
