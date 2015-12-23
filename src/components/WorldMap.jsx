@@ -4,6 +4,8 @@ const MAP_SIZE = 2048;
 
 import { index } from '../player-model';
 
+import { List, Range } from 'immutable';
+
 export class WorldMap extends React.Component {
   static displayName = 'CanvasWorldMap';
 
@@ -36,11 +38,28 @@ export class WorldMap extends React.Component {
   }
 
   mouseMoved(evt) {
-    const pos = index(evt.clientX, evt.clientY);
-    const players = this.props.playerGrid[pos];
-    players.forEach(playerID => {
-      console.log(this.props.players.get(playerID));
-    });
+    const rect = this.canvas.getBoundingClientRect();
+    const x = evt.clientX - rect.left;
+    const y = evt.clientY - rect.top;
+
+    // We'll go out a fixed grid size beyond where the mouse is hovering on
+    const centerQuery = index(x, y);
+    const yRange = new Range(-10, 10, 1);
+    const positions = yRange.map(_y => {
+      const pos = centerQuery + _y * MAP_SIZE;
+      return new Range(pos - 10, pos + 10);
+    }).flatten();
+
+    const players = positions.flatMap(
+      (pos) => {
+        return this.props.playerGrid[pos];
+      }
+    ).flatten().map(id => this.props.players.get(id));
+
+    if (! players.isEmpty()) {
+      console.log(players.toArray());
+    }
+
   }
 
   paint(context) {
