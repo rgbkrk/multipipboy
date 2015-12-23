@@ -5,7 +5,6 @@ const forwarded = require('forwarded-for');
 const sio = require('socket.io');
 
 const fakes = require('./fake-events');
-const fakeEvents = fakes.generate();
 
 const fakePlayerBatch = fakes.generatePlayerData()
   .bufferWithTime(10);
@@ -23,15 +22,5 @@ io.on('connection', (socket) => {
 
   fakePlayerBatch.subscribe((playerbatch) => {
     socket.emit('mappy:playerbatch', playerbatch);
-  });
-
-  fakeEvents.subscribe((data) => {
-    socket.emit('mappy:data', data);
-  },
-  (err) => {
-    console.error(err);
-  },
-  () => {
-    console.log('events closed');
   });
 });

@@ -27,23 +27,6 @@ export function walk(pt) {
   return newPt;
 }
 
-export function generate() {
-  const gameState = {
-    players: codsworthNames.map(newPlayer),
-  };
-  const fakeEvents = Rx.Observable.create((observer) => {
-    setInterval(() => {
-      gameState.players = gameState.players.map(
-        player => Object.assign(player, {
-          x: walk(player.x),
-          y: walk(player.y),
-        }));
-      observer.onNext(gameState.players);
-    }, 10);
-  });
-  return fakeEvents;
-}
-
 export function generatePlayerData() {
   const gameState = {
     players: codsworthNames.map(newPlayer),
