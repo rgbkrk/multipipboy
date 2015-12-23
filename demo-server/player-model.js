@@ -1,3 +1,5 @@
+/* eslint no-bitwise: 0 */
+
 import { List, Map } from 'immutable';
 
 export const DEFAULT_WIDTH = 2048;
@@ -17,6 +19,11 @@ export class PlayerStore {
       for (let i = 0; i < this.playerGrid.length; i++) {
         this.playerGrid[i] = new List();
       }
+
+      // Quite mutable, must track accordingly
+      this.imageBuffer = new Buffer(this.playerGrid.length);
+      // This can be the actual underlying map later
+      this.blankSpace = new Buffer(this.playerGrid.length).fill(0);
     }
 
     index(x, y) {
@@ -29,6 +36,22 @@ export class PlayerStore {
       }
     }
 
+    updateColor(x, y) {
+      const pos = this.index(x, y);
+      const pixelPos = pos << 2;
+
+      let color = this.blankSpace.slice(pixelPos, pixelPos + 4);
+      const players = this.playerGrid[pos];
+      console.log(color);
+      if(!players.isEmpty()) {
+        // We'll use who's on top (?) for the color here
+        color = players.last().color;
+      }
+      console.log(players.last());
+      console.log(color);
+      color.copy(this.imageBuffer, pixelPos, pixelPos + 4);
+    }
+
     set(id, playerData) {
       if(!playerData.hasOwnProperty('x') || !playerData.hasOwnProperty('y')) {
         throw new Error('x and y must be set on player data');
@@ -37,17 +60,20 @@ export class PlayerStore {
 
       // If we had an old position, remove it from the playerGrid
       // One optimization not done here - if the old position and the new position
-      // are the same, don't update either of them
+      // are the same, don't update either of them. If that optimization is
+      // brought in though, playerData.color should be considered on the imageBuffer
       if (this.players.has(id)) {
         const original = this.players.get(id);
         const pos = this.index(original.x, original.y);
         this.playerGrid[pos] = this.playerGrid[pos].filter(x => x !== id);
+        this.updateColor(original.x, original.y);
       }
 
       this.players = this.players.set(id, playerData);
 
       const newPos = this.index(playerData.x, playerData.y);
       this.playerGrid[newPos] = this.playerGrid[newPos].push(id);
+      this.updateColor(playerData.x, playerData.y);
     }
 
     get(id) {
