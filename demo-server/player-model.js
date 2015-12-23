@@ -34,7 +34,7 @@ export class PlayerStore {
 
     boundsCheck(x, y) {
       if(x < 0 || y < 0 || x >= this.width || y >= this.height) {
-        throw new Error('x or y are out of range of this map');
+        throw new Error(`{x: ${x}, y: ${y}} are out of range of this map (${this.width}, ${this.height})`);
       }
     }
 

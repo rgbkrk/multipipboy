@@ -23,6 +23,10 @@ export default function connect(url) {
     socket.on('mappy:data', (data) => {
       observer.onNext(data);
     });
+
+    socket.on('mappy:rawdata', (rawdata) => {
+      console.log(rawdata);
+    });
   });
   return socketStream.retryWhen((attempts) => {
     return Rx.Observable.range(0, 32) // ~100 days in total is fine for everyone
