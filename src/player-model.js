@@ -25,14 +25,19 @@ export class PlayerStore {
 
     boundsCheck(x, y) {
       if(x < 0 || y < 0 || x >= this.width || y >= this.height) {
-        throw new Error('x or y are out of range of this map');
+        throw new Error(`{x: ${x}, y: ${y}} are out of range of this map (${this.width}, ${this.height})`);
       }
+    }
+
+    get(id) {
+      return this.players.get(id);
     }
 
     set(id, playerData) {
       if(!playerData.hasOwnProperty('x') || !playerData.hasOwnProperty('y')) {
         throw new Error('x and y must be set on player data');
       }
+
       this.boundsCheck(playerData.x, playerData.y);
 
       // If we had an old position, remove it from the playerGrid
@@ -50,8 +55,11 @@ export class PlayerStore {
       this.playerGrid[newPos] = this.playerGrid[newPos].push(id);
     }
 
-    get(id) {
-      return this.players.get(id);
+    delete(id) {
+      const player = this.players.get(id);
+      const pos = this.index(player.x, player.y);
+      this.playerGrid[pos] = this.playerGrid[pos].filter(x => x !== id);
+      this.players = this.players.delete(id);
     }
 
     playersAt(x, y) {

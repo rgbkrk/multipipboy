@@ -6,7 +6,7 @@ export class WorldMap extends React.Component {
   static displayName = 'CanvasWorldMap';
 
   static propTypes = {
-    players: React.PropTypes.array,
+    players: React.PropTypes.any,
     // mapData: React.PropTypes.any,
   }
 
@@ -46,7 +46,7 @@ export class WorldMap extends React.Component {
       context.drawImage(image, 0, 0);
     }
 
-    this.props.players.map((player) => {
+    this.props.players.forEach((player) => {
       context.fillStyle = '#' + player.id.slice(0, 6);
       context.fillRect(player.x, player.y, 2, 2);
     });

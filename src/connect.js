@@ -10,30 +10,29 @@ const io = require('socket.io-client');
  * @return {Observable} - stream of multiplayer data
  */
 export default function connect(url) {
-  const socketStream = Rx.Observable.create((observer) => {
+
+  const mainStream = Rx.Observable.create((observer) => {
     const socket = io(url);
     socket.on('connect', () => {
+      observer.onNext(socket);
     });
-
     socket.on('error', (err) => {
-      console.error('my error', err);
       observer.onError(err);
     });
-
-    socket.on('mappy:data', (data) => {
-      observer.onNext(data);
-    });
-  });
-  return socketStream.retryWhen((attempts) => {
+  })
+  .retryWhen((attempts) => {
     return Rx.Observable.range(0, 32) // ~100 days in total is fine for everyone
       .zip(attempts, i => i)
       .flatMap(i => {
         return Rx.Observable.timer(Math.pow(2, i) * 1000);
       });
-  })
-  // Ignore updates with nothing as well as our handled errors above
-  .filter(x => x !== [])
-  // Assume we want to only propagate data at ~60fps
-  .throttle(16)
-  .distinctUntilChanged();
+  });
+
+  return mainStream
+    .flatMap(socket => {
+      return Rx.Observable.fromEvent(socket, 'mappy:playerbatch');
+    })
+    .filter(x => x !== [])
+    .throttle(16)
+    .distinctUntilChanged();
 }

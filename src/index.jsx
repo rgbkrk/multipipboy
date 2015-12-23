@@ -6,8 +6,25 @@ import { WorldMap } from './components/WorldMap';
 
 import connect from './connect';
 
-const events = connect('http://127.0.0.1:8090');
-const WorldMapContainer = withStore(events, 'players')(WorldMap);
+const batchEvents = connect('http://127.0.0.1:8090');
+
+import { PlayerStore } from './player-model';
+
+const ps = new PlayerStore();
+const playerStore = batchEvents.map((playerbatch) => {
+  playerbatch.forEach(player => {
+    ps.set(player.id, player);
+  });
+  return {
+    players: ps.players,
+    playerGrid: ps.playerGrid,
+  };
+});
+
+const players = playerStore.map(state => state.players);
+// const playerGrid = playerStore.map(state => state.playerGrid);
+
+const WorldMapContainer = withStore(players, 'players')(WorldMap);
 
 ReactDOM.render(
   <WorldMapContainer />, document.querySelector('#app')
