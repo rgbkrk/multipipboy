@@ -42,13 +42,10 @@ export class PlayerStore {
 
       let color = this.blankSpace.slice(pixelPos, pixelPos + 4);
       const players = this.playerGrid[pos];
-      console.log(color);
       if(!players.isEmpty()) {
         // We'll use who's on top (?) for the color here
-        color = players.last().color;
+        color = this.get(players.last()).color;
       }
-      console.log(players.last());
-      console.log(color);
       color.copy(this.imageBuffer, pixelPos, pixelPos + 4);
     }
 
