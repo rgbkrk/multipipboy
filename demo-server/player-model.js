@@ -27,6 +27,9 @@ export class PlayerStore {
       if(!playerData.hasOwnProperty('x') || !playerData.hasOwnProperty('y')) {
         throw new Error('x and y must be set on player data');
       }
+      if(playerData.x > this.width || playerData.y > this.height) {
+        throw new Error('x or y are out of range of this map');
+      }
 
       // If we had an old position, remove it from the playerGrid
       // One optimization not done here - if the old position and the new position
