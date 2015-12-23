@@ -1,5 +1,6 @@
 import Rx from 'rx';
 
+const PNG = require('node-png').PNG;
 const uuid = require('node-uuid');
 
 const mapSize = 2048;
@@ -42,4 +43,31 @@ export function generate() {
     }, 10);
   });
   return fakeEvents;
+}
+
+export function generateImage() {
+  // In comes new player positions
+
+  // We take in all the player data at once
+  // and form a
+
+  // var idx = (mapSize * y + x) << 2;
+  // idx + 0 <- red
+  // idx + 1 <- green
+  // idx + 2 <- blue
+  // idx + 3 <- alpha
+
+  // Assume p.data is a fresh image for this tick?
+  // let pixelPos = (mapSize * player.y + player.x) << 2;
+  // player.color.copy(p.data, pixelPos)
+
+  // Out goes a new map
+
+  // Bad representation would leave the previous pixels
+
+  var subject = new Rx.Subject();
+
+  var p = new PNG({width: 2048, height: 2048});
+  // Set p.data
+
 }
