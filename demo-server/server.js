@@ -7,6 +7,9 @@ const sio = require('socket.io');
 const fakes = require('./fake-events');
 const fakeEvents = fakes.generate();
 
+const fakePlayerBatch = fakes.generatePlayerData()
+  .bufferWithTime(10);
+
 const PORT = process.env.PORT || 8090;
 const UID = process.env.MAPPY_SERVER_UID || uuid.v4();
 
@@ -17,6 +20,10 @@ io.on('connection', (socket) => {
   const req = socket.request;
   const ip = forwarded(req, req.headers);
   debug('client ip %s', ip);
+
+  fakePlayerBatch.subscribe((playerbatch) => {
+    socket.emit('mappy:playerbatch', playerbatch);
+  });
 
   fakeEvents.subscribe((data) => {
     socket.emit('mappy:data', data);

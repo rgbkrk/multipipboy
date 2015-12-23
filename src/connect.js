@@ -30,7 +30,7 @@ export default function connect(url) {
 
   return mainStream
     .flatMap(socket => {
-      return Rx.Observable.fromEvent(socket, 'mappy:data');
+      return Rx.Observable.fromEvent(socket, 'mappy:playerbatch');
     })
     .filter(x => x !== [])
     .throttle(16)

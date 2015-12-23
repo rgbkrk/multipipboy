@@ -37,6 +37,7 @@ export class PlayerStore {
       if(!playerData.hasOwnProperty('x') || !playerData.hasOwnProperty('y')) {
         throw new Error('x and y must be set on player data');
       }
+
       this.boundsCheck(playerData.x, playerData.y);
 
       // If we had an old position, remove it from the playerGrid
