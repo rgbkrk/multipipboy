@@ -8,9 +8,9 @@ import connect from './connect';
 
 const batchEvents = connect('http://127.0.0.1:8090');
 
-import { PlayerStore } from './player-model';
+import { PlayerModel } from './player-model';
 
-const ps = new PlayerStore();
+const ps = new PlayerModel();
 const playerStore = batchEvents.map((playerbatch) => {
   playerbatch.forEach(player => {
     ps.set(player.id, player);

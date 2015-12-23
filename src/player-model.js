@@ -3,7 +3,7 @@ import { List, Map } from 'immutable';
 export const DEFAULT_WIDTH = 2048;
 export const DEFAULT_HEIGHT = 2048;
 
-export class PlayerStore {
+export class PlayerModel {
     constructor(width = DEFAULT_WIDTH, height = DEFAULT_HEIGHT) {
       this.width = width;
       this.height = height;
