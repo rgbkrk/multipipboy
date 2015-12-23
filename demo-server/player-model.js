@@ -23,13 +23,17 @@ export class PlayerStore {
       return this.width * y + x;
     }
 
+    boundsCheck(x, y) {
+      if(x < 0 || y < 0 || x >= this.width || y >= this.height) {
+        throw new Error('x or y are out of range of this map');
+      }
+    }
+
     set(id, playerData) {
       if(!playerData.hasOwnProperty('x') || !playerData.hasOwnProperty('y')) {
         throw new Error('x and y must be set on player data');
       }
-      if(playerData.x > this.width || playerData.y > this.height) {
-        throw new Error('x or y are out of range of this map');
-      }
+      this.boundsCheck(playerData.x, playerData.y);
 
       // If we had an old position, remove it from the playerGrid
       // One optimization not done here - if the old position and the new position
@@ -51,6 +55,7 @@ export class PlayerStore {
     }
 
     inhabitants(x, y) {
+      this.boundsCheck(x, y);
       const pos = this.index(x, y);
       return this.playerGrid[pos];
     }
