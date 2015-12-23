@@ -8,7 +8,6 @@ import Rx from 'rx';
 import { PNG } from 'node-png';
 
 const fakes = require('./fake-events');
-const fakeEvents = fakes.generate();
 const fakePlayerData = fakes.generatePlayerData();
 
 import { PlayerStore } from './player-model';
@@ -18,18 +17,16 @@ const UID = process.env.MAPPY_SERVER_UID || uuid.v4();
 
 const ps = new PlayerStore();
 
-const imagesInFlight = fakePlayerData
+const imageStream = fakePlayerData
   .map((player) => {
     return ps.set(player.id, player);
   })
-  .sample(10)
+  .throttle(30)
   .map(() => {
     const p = new PNG({ width: ps.width, height: ps.height });
     ps.imageBuffer.copy(p.data);
     return p;
-  });
-
-const imageStream = imagesInFlight
+  })
   .concatMap((p) => {
     return Rx.Observable
             .create(observer => {
@@ -60,15 +57,5 @@ io.on('connection', (socket) => {
 
   imageStream.subscribe((data) => {
     socket.emit('mappy:rawdata', data);
-  });
-
-  fakeEvents.subscribe((data) => {
-    socket.emit('mappy:data', data);
-  },
-  (err) => {
-    console.error(err);
-  },
-  () => {
-    console.log('events closed');
   });
 });

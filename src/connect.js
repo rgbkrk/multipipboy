@@ -20,12 +20,8 @@ export default function connect(url) {
       observer.onError(err);
     });
 
-    socket.on('mappy:data', (data) => {
-      observer.onNext(data);
-    });
-
     socket.on('mappy:rawdata', (rawdata) => {
-      console.log(rawdata);
+      observer.onNext(rawdata);
     });
   });
   return socketStream.retryWhen((attempts) => {
@@ -35,8 +31,6 @@ export default function connect(url) {
         return Rx.Observable.timer(Math.pow(2, i) * 1000);
       });
   })
-  // Ignore updates with nothing as well as our handled errors above
-  .filter(x => x !== [])
   // Assume we want to only propagate data at ~60fps
   .throttle(16)
   .distinctUntilChanged();
