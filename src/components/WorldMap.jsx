@@ -42,12 +42,14 @@ export class WorldMap extends React.Component {
     const x = evt.clientX - rect.left;
     const y = evt.clientY - rect.top;
 
+    const delta = 5
+
     // We'll go out a fixed grid size beyond where the mouse is hovering on
     const centerQuery = index(x, y);
-    const yRange = new Range(-10, 10, 1);
+    const yRange = new Range(-delta, delta, 1);
     const positions = yRange.map(_y => {
       const pos = centerQuery + _y * MAP_SIZE;
-      return new Range(pos - 10, pos + 10);
+      return new Range(pos - delta, pos + delta);
     }).flatten();
 
     const players = positions.flatMap(
