@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { withStore } from 'fluorine-lib';
+import withStore from './player-store';
 import { WorldMap } from './components/WorldMap';
 
 import connect from './connect';
@@ -21,10 +21,7 @@ const playerStore = batchEvents.map((playerbatch) => {
   };
 });
 
-const players = playerStore.map(state => state.players);
-// const playerGrid = playerStore.map(state => state.playerGrid);
-
-const WorldMapContainer = withStore(players, 'players')(WorldMap);
+const WorldMapContainer = withStore(playerStore)(WorldMap);
 
 ReactDOM.render(
   <WorldMapContainer />, document.querySelector('#app')
