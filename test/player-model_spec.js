@@ -3,7 +3,7 @@ import { expect } from 'chai';
 
 import { List } from 'immutable';
 
-import { PlayerStore, DEFAULT_WIDTH, DEFAULT_HEIGHT } from '../demo-server/player-model';
+import { PlayerStore, DEFAULT_WIDTH, DEFAULT_HEIGHT } from '../src/player-model';
 
 describe('PlayerStore', () => {
   it('initializes with a default big empty setup', () => {
