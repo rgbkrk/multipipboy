@@ -1,12 +1,32 @@
 import React from 'react';
 
-export default function withStore(playerModel) {
-  return Child => class StoreContainer extends React.Component {
-    static displayName = 'PlayerStore'
+import connect from './connect';
+
+import { WorldMap } from './components/WorldMap';
+import { PlayerModel } from './player-model';
+
+export const WorldMapStore = withConnection('http://127.0.0.1:8090');
+
+export function withConnection(url) {
+  const batchEvents = connect(url);
+  const ps = new PlayerModel();
+
+  const playerData = batchEvents.map((playerbatch) => {
+    playerbatch.forEach(player => {
+      ps.set(player.id, player);
+    });
+    return {
+      players: ps.players,
+      playerGrid: ps.playerGrid,
+    };
+  });
+
+  return class WorldMapContainer extends React.Component {
+    static displayName = 'WorldMapContainer'
     constructor(props) {
       super(props);
 
-      this.playerModel = playerModel;
+      this.playerModel = playerData;
 
       this.state = {
         players: null,
@@ -37,7 +57,8 @@ export default function withStore(playerModel) {
       const props = {};
       props.players = this.state.players;
       props.playerGrid = this.state.playerGrid;
-      return <Child {...Object.assign({}, this.props, props)}/>;
+      return <WorldMap players={this.state.players}
+                       playerGrid={this.state.playerGrid} />;
     }
   };
 }
