@@ -3,6 +3,10 @@ import { List, Map } from 'immutable';
 export const DEFAULT_WIDTH = 2048;
 export const DEFAULT_HEIGHT = 2048;
 
+export function index(x, y, width = DEFAULT_WIDTH) {
+  return width * y + x;
+}
+
 export class PlayerModel {
     constructor(width = DEFAULT_WIDTH, height = DEFAULT_HEIGHT) {
       this.width = width;
@@ -20,7 +24,7 @@ export class PlayerModel {
     }
 
     index(x, y) {
-      return this.width * y + x;
+      return index(x, y, this.width);
     }
 
     boundsCheck(x, y) {
