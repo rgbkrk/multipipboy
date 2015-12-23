@@ -51,6 +51,10 @@ export class PlayerStore {
       color.copy(this.imageBuffer, pixelPos, 0);
     }
 
+    get(id) {
+      return this.players.get(id);
+    }
+
     set(id, playerData) {
       if(!playerData.hasOwnProperty('x') || !playerData.hasOwnProperty('y')) {
         throw new Error('x and y must be set on player data');
@@ -75,8 +79,14 @@ export class PlayerStore {
       this.updateColor(playerData.x, playerData.y);
     }
 
-    get(id) {
-      return this.players.get(id);
+    delete(id) {
+      const player = this.players.get(id);
+      const pos = this.index(player.x, player.y);
+
+      this.playerGrid[pos] = this.playerGrid[pos].filter(x => x !== id);
+      this.updateColor(player.x, player.y);
+
+      this.players = this.players.delete(id);
     }
 
     playersAt(x, y) {
