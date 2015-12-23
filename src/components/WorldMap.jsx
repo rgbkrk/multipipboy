@@ -6,8 +6,7 @@ export class WorldMap extends React.Component {
   static displayName = 'CanvasWorldMap';
 
   static propTypes = {
-    players: React.PropTypes.array,
-    // mapData: React.PropTypes.any,
+    imageData: React.PropTypes.any,
   }
 
   componentDidMount() {
@@ -34,7 +33,7 @@ export class WorldMap extends React.Component {
   }
 
   mouseMoved(evt) {
-    console.log(evt.clientX, evt.clientY);
+    // console.log(evt.clientX, evt.clientY);
   }
 
   paint(context) {
@@ -46,10 +45,25 @@ export class WorldMap extends React.Component {
       context.drawImage(image, 0, 0);
     }
 
-    this.props.players.map((player) => {
-      context.fillStyle = '#' + player.id.slice(0, 6);
-      context.fillRect(player.x, player.y, 2, 2);
-    });
+    if(this.props.imageData) {
+      const img = new Image();
+      const blob = new Blob(new Uint8Array(this.props.imageData),
+                            { type: 'image/png' });
+      const url = URL.createObjectURL(blob);
+
+      img.onload = () => {
+        console.log('looooaded');
+        context.drawImage(img, 0, 0);
+        URL.revokeObjectURL(url);
+      };
+      img.src = url;
+      // context.drawImage(this.props.imageData);
+      /* imData = new ImageData()
+      const buf8 = new Uint8ClampedArray(this.props.imageData);
+      const imageData = context.getImageData(0, 0, MAP_SIZE, MAP_SIZE);
+      imageData.data.set(buf8); */
+    }
+
     context.restore();
   }
 

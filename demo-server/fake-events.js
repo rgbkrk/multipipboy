@@ -8,11 +8,15 @@ const adjectives = require('./adjectives');
 
 export function newPlayer(name) {
   const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+  const id = uuid.v4();
+
+  const color = new Buffer(id.slice(0, 3 * 2) + 'ff', 'hex');
   return {
+    id,
+    color,
     name: `${adjective} ${name}`,
-    x: Math.round(Math.random() * mapSize),
-    y: Math.round(Math.random() * mapSize),
-    id: uuid.v4(),
+    x: Math.round(Math.random() * (mapSize - 1)),
+    y: Math.round(Math.random() * (mapSize - 1)),
   };
 }
 
@@ -39,6 +43,26 @@ export function generate() {
           y: walk(player.y),
         }));
       observer.onNext(gameState.players);
+    }, 10);
+  });
+  return fakeEvents;
+}
+
+export function generatePlayerData() {
+  const gameState = {
+    players: codsworthNames.map(newPlayer),
+  };
+  const fakeEvents = Rx.Observable.create((observer) => {
+    setInterval(() => {
+      gameState.players = gameState.players.map(
+        player => {
+          const ret = Object.assign(player, {
+            x: walk(player.x),
+            y: walk(player.y),
+          });
+          observer.onNext(player);
+          return ret;
+        });
     }, 10);
   });
   return fakeEvents;
