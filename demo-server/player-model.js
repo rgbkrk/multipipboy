@@ -50,11 +50,11 @@ export class PlayerStore {
       this.playerGrid[newPos] = this.playerGrid[newPos].push(id);
     }
 
-    lookupPlayer(id) {
+    get(id) {
       return this.players.get(id);
     }
 
-    inhabitants(x, y) {
+    playersAt(x, y) {
       this.boundsCheck(x, y);
       const pos = this.index(x, y);
       return this.playerGrid[pos];
