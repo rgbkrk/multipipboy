@@ -20,10 +20,11 @@ export class PlayerStore {
         this.playerGrid[i] = new List();
       }
 
-      // Quite mutable, must track accordingly
-      this.imageBuffer = new Buffer(this.playerGrid.length);
       // This can be the actual underlying map later
       this.blankSpace = new Buffer(this.playerGrid.length).fill(0);
+      // Quite mutable, must track accordingly
+      this.imageBuffer = new Buffer(this.playerGrid.length);
+      this.blankSpace.copy(this.imageBuffer);
     }
 
     index(x, y) {
