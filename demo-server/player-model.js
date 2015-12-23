@@ -21,9 +21,10 @@ export class PlayerStore {
       }
 
       // This can be the actual underlying map later
-      this.blankSpace = new Buffer(this.playerGrid.length).fill(0);
+      this.blankSpace = new Buffer(this.playerGrid.length * 4).fill(0);
       // Quite mutable, must track accordingly
-      this.imageBuffer = new Buffer(this.playerGrid.length);
+      this.imageBuffer = new Buffer(this.playerGrid.length * 4);
+      // Copying over for the case of when we have original imageData
       this.blankSpace.copy(this.imageBuffer);
     }
 
