@@ -10,7 +10,7 @@ export function newPlayer(name) {
   const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
   const id = uuid.v4();
 
-  const color = new Buffer(id.slice(0, 3 * 2) + 'ff');
+  const color = new Buffer(id.slice(0, 3 * 2) + 'ff', 'hex');
   return {
     id,
     color,
