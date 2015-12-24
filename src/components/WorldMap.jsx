@@ -4,7 +4,9 @@ const MAP_SIZE = 2048;
 
 import { index } from '../player-model';
 
-import { List, Range } from 'immutable';
+import Stats from './Stats';
+
+import { Range } from 'immutable';
 
 export class WorldMap extends React.Component {
   static displayName = 'CanvasWorldMap';
@@ -42,7 +44,7 @@ export class WorldMap extends React.Component {
     const x = evt.clientX - rect.left;
     const y = evt.clientY - rect.top;
 
-    const delta = 5
+    const delta = 5;
 
     // We'll go out a fixed grid size beyond where the mouse is hovering on
     const centerQuery = index(x, y);
@@ -59,7 +61,11 @@ export class WorldMap extends React.Component {
     ).flatten().map(id => this.props.players.get(id));
 
     if (! players.isEmpty()) {
-      console.log(players.toArray().map(p => p.name));
+      this.setState({
+        tooltip: {
+          player: players.last(),
+        },
+      });
     }
 
   }
@@ -81,11 +87,24 @@ export class WorldMap extends React.Component {
   }
 
   render() {
-    return <canvas
-            width={MAP_SIZE}
-            height={MAP_SIZE}
-            ref={(c) => this.canvas = c}
-            onMouseMove={this.mouseMoved.bind(this)}
-            />;
+    return (
+      <div>
+      { (this.state && this.state.tooltip) ?
+            <Stats
+              player={this.state.tooltip.player}
+              mapSize={2048}
+              left={this.state.tooltip.left}
+              top={this.state.tooltip.top}
+              /> :
+          null
+        }
+        <canvas
+          width={MAP_SIZE}
+          height={MAP_SIZE}
+          ref={(c) => this.canvas = c}
+          onMouseMove={this.mouseMoved.bind(this)}
+          />;
+      </div>
+    );
   }
 }
