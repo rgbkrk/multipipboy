@@ -39,26 +39,37 @@ export class WorldMap extends React.Component {
     this.setState({ image });
   }
 
-  mouseMoved(evt) {
+  mouseMoved(event) {
+
+    const style = document.defaultView.getComputedStyle(this.canvas, null);
+    function styleValue(property) {
+      return parseInt(style.getPropertyValue(property), 10) || 0;
+    }
+    const scaleX = this.canvas.width / styleValue('width');
+    const scaleY = this.canvas.height / styleValue('height');
     const rect = this.canvas.getBoundingClientRect();
-    const x = evt.clientX - rect.left;
-    const y = evt.clientY - rect.top;
+    const x = Math.round(scaleX * (event.clientX - rect.left - this.canvas.clientLeft - styleValue('padding-left')));
+    const y = Math.round(scaleY * (event.clientY - rect.top - this.canvas.clientTop - styleValue('padding-top')));
 
     const delta = 5;
 
     // We'll go out a fixed grid size beyond where the mouse is hovering on
     const centerQuery = index(x, y);
+
     const yRange = new Range(-delta, delta, 1);
     const positions = yRange.map(_y => {
       const pos = centerQuery + _y * MAP_SIZE;
       return new Range(pos - delta, pos + delta);
     }).flatten();
 
-    const players = positions.flatMap(
+    const playerIDs = positions.flatMap(
       (pos) => {
-        return this.props.playerGrid[pos];
+        const posPlayerIDs = this.props.playerGrid[pos];
+        return posPlayerIDs;
       }
-    ).flatten().map(id => this.props.players.get(id));
+    ).flatten();
+
+    const players = playerIDs.map(id => this.props.players.get(id));
 
     if (! players.isEmpty()) {
       this.setState({
