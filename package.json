@@ -7,6 +7,7 @@
     "codsworth-names": "^1.0.1",
     "color": "^0.10.1",
     "debug": "^2.2.0",
+    "express": "^4.13.3",
     "fluorine-lib": "^0.4.1",
     "forwarded-for": "^1.0.0",
     "immutable": "^3.7.6",
@@ -39,7 +40,8 @@
     "react-hot-loader": "^1.3.0",
     "url-loader": "^0.5.7",
     "webpack": "^1.12.9",
-    "webpack-dev-server": "^1.14.0"
+    "webpack-dev-middleware": "^1.4.0",
+    "webpack-hot-middleware": "^2.6.0"
   },
   "babel": {
     "presets": [
@@ -55,8 +57,7 @@
     "test": "mocha --compilers js:babel-core/register --require ./test/test_helper.js 'test/**/*.@(js|jsx)'",
     "test:watch": "npm run test -- --watch --watch-extensions jsx",
     "lint": "eslint .",
-    "live": "webpack-dev-server",
-    "demo-server": "babel-node demo-server/server.js"
+    "live": "babel-node server.js"
   },
   "repository": {
     "type": "git",
