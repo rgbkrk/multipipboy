@@ -5,10 +5,10 @@ import connect from './connect';
 import { WorldMap } from './components/WorldMap';
 import { PlayerModel } from './player-model';
 
-export const WorldMapStore = withConnection('http://127.0.0.1');
+export const WorldMapStore = createWorldMapStore();
 
-export function withConnection(url) {
-  const batchEvents = connect(url);
+export function createWorldMapStore() {
+  const batchEvents = connect();
   const ps = new PlayerModel();
 
   const playerData = batchEvents.map((playerbatch) => {
