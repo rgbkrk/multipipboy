@@ -39,6 +39,6 @@ export class WorldMapStore extends React.Component {
     }
 
     return <WorldMap players={this.state.players}
-                     playerGrid={this.state.playerGrid} />;
+                     playerGrid={this.state.playerGrid} />
   }
 }
