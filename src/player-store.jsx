@@ -5,7 +5,7 @@ import connect from './connect';
 import { WorldMap } from './components/WorldMap';
 import { PlayerModel } from './player-model';
 
-export const WorldMapStore = withConnection('http://127.0.0.1:8090');
+export const WorldMapStore = withConnection('http://127.0.0.1');
 
 export function withConnection(url) {
   const batchEvents = connect(url);

@@ -5,13 +5,13 @@ const forwarded = require('forwarded-for');
 const http = require('http');
 const express = require('express');
 
-const webpack = require('webpack');
-const webpackConfig = require('./webpack.config');
-const compiler = webpack(webpackConfig);
-
 const app = express();
 
 if (process.env.NODE_ENV !== 'production') {
+  const webpack = require('webpack');
+  const webpackConfig = require('./webpack.config');
+  const compiler = webpack(webpackConfig);
+
   app.use(require('webpack-dev-middleware')(compiler, {
     noInfo: true,
     publicPath: webpackConfig.output.publicPath,
@@ -28,7 +28,7 @@ const fakes = require('./fake');
 const fakePlayerBatch = fakes.generatePlayerData()
   .bufferWithTime(10);
 
-const PORT = process.env.PORT || 8090;
+const PORT = process.env.PORT || 8080;
 const UID = process.env.MAPPY_SERVER_UID || uuid.v4();
 
 server.listen(PORT);

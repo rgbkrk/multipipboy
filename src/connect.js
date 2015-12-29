@@ -6,13 +6,12 @@ const io = require('socket.io-client');
  * Creates an observable connected to `url` with multiplayer data from that
  * endpoint if available. Will perform exponential back-off if the connection
  * goes out.
- * @param {string} url - URL of socket.io websocket
  * @return {Observable} - stream of multiplayer data
  */
-export default function connect(url) {
+export default function connect() {
 
   const mainStream = Rx.Observable.create((observer) => {
-    const socket = io(url);
+    const socket = io();
     socket.on('connect', () => {
       observer.onNext(socket);
     });
