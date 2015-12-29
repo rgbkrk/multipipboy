@@ -6,7 +6,7 @@ export class WorldMapStore extends React.Component {
   static displayName = 'WorldMapContainer'
 
   static propTypes = {
-    batchEvents: React.PropTypes.any,
+    playerStream: React.PropTypes.any,
   }
 
   constructor(props) {
@@ -19,7 +19,7 @@ export class WorldMapStore extends React.Component {
   }
 
   componentWillMount() {
-    this.sub = this.props.batchEvents.subscribe(next => {
+    this.sub = this.props.playerStream.subscribe(next => {
       this.setState({
         players: next.players,
         playerGrid: next.playerGrid,
