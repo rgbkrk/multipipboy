@@ -3,12 +3,25 @@ const uuid = require('node-uuid');
 const debug = require('debug');
 const forwarded = require('forwarded-for');
 const http = require('http');
-const app = require('express')();
+const express = require('express');
+
+const webpack = require('webpack');
+const webpackConfig = require('./webpack.config');
+const compiler = webpack(webpackConfig);
+
+const app = express();
+app.use(require('webpack-dev-middleware')(compiler, {
+  noInfo: true,
+  publicPath: webpackConfig.output.publicPath,
+}));
+app.use(require('webpack-hot-middleware')(compiler));
+
+app.use(express.static('dist'));
 
 const server = new http.Server(app);
 const io = require('socket.io')(server);
 
-const fakes = require('./fake-events');
+const fakes = require('./demo-server/fake-events');
 
 const fakePlayerBatch = fakes.generatePlayerData()
   .bufferWithTime(10);
