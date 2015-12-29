@@ -25,13 +25,15 @@ export default React.createClass({
              Object.assign({}, styles.stats, {
                left: `${player.x}px`,
                top: `${player.y}px`,
-               padding: '5px',
                backgroundColor: playerColor,
                color: fontColor,
                fontSize: '1em',
                zIndex: 9000,
              })}>
-             {this.props.player.name}
+             <h3 style={{
+               paddingLeft: '15px',
+               paddingRight: '15px',
+             }}>{this.props.player.name}</h3>
       </div>
     );
   },

@@ -1,17 +1,28 @@
-/* eslint no-path-concat: 0 */
-
 const webpack = require('webpack');
+const path = require('path');
+
+const inDev = process.env.NODE_ENV !== 'production';
+
+const plugins = [];
+if (inDev) {
+  plugins.push(
+    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoErrorsPlugin()
+  );
+}
 
 module.exports = {
   entry: [
     'webpack-hot-middleware/client',
-    './src/index.jsx',
+    './index.jsx',
   ],
+  context: path.join(__dirname, 'src'),
   module: {
     loaders: [{
       test: /\.jsx?$/,
       exclude: /node_modules/,
-      loader: 'react-hot!babel',
+      loader: inDev ? 'react-hot!babel' : 'babel',
     }, {
       test: /\.css$/,
       loader: 'style!css!autoprefixer?browsers=last 2 versions',
@@ -24,17 +35,9 @@ module.exports = {
     extensions: ['', '.js', '.jsx'],
   },
   output: {
-    path: __dirname + '/dist',
+    path: path.join(__dirname, '/dist'),
     publicPath: '/',
     filename: 'bundle.js',
   },
-  devServer: {
-    contentBase: './dist',
-    hot: true,
-  },
-  plugins: [
-    new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin(),
-  ],
+  plugins,
 };
