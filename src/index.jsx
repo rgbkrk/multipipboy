@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import connect from './connect';
+import observePlayerBatches from './observables/player-batches';
 import { WorldMapStore } from './player-store';
 import { PlayerModel } from './player-model';
 
-const batchEvents = connect();
+const playerBatches = observePlayerBatches();
 const ps = new PlayerModel();
 
-const playerData = batchEvents.map((playerbatch) => {
+const playerData = playerBatches.map((playerbatch) => {
   playerbatch.forEach(player => {
     ps.set(player.id, player);
   });
