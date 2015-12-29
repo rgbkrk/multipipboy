@@ -1,64 +1,44 @@
 import React from 'react';
 
-import connect from './connect';
-
 import { WorldMap } from './components/WorldMap';
-import { PlayerModel } from './player-model';
 
-export const WorldMapStore = withConnection('http://127.0.0.1');
+export class WorldMapStore extends React.Component {
+  static displayName = 'WorldMapContainer'
 
-export function withConnection(url) {
-  const batchEvents = connect(url);
-  const ps = new PlayerModel();
+  static propTypes = {
+    playerStream: React.PropTypes.any,
+  }
 
-  const playerData = batchEvents.map((playerbatch) => {
-    playerbatch.forEach(player => {
-      ps.set(player.id, player);
-    });
-    return {
-      players: ps.players,
-      playerGrid: ps.playerGrid,
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      players: null,
+      playerGrid: null,
     };
-  });
+  }
 
-  return class WorldMapContainer extends React.Component {
-    static displayName = 'WorldMapContainer'
-    constructor(props) {
-      super(props);
-
-      this.playerModel = playerData;
-
-      this.state = {
-        players: null,
-        playerGrid: null,
-      };
-    }
-
-    componentWillMount() {
-      this.sub = this.playerModel.subscribe(next => {
-        this.setState({
-          players: next.players,
-          playerGrid: next.playerGrid,
-        });
-      }, err => {
-        throw err;
+  componentWillMount() {
+    this.sub = this.props.playerStream.subscribe(next => {
+      this.setState({
+        players: next.players,
+        playerGrid: next.playerGrid,
       });
+    }, err => {
+      throw err;
+    });
+  }
+
+  componentWillUnmount() {
+    this.sub.dispose();
+  }
+
+  render() {
+    if (this.state.players === null) {
+      return null;
     }
 
-    componentWillUnmount() {
-      this.sub.dispose();
-    }
-
-    render() {
-      if (this.state.players === null) {
-        return null;
-      }
-
-      const props = {};
-      props.players = this.state.players;
-      props.playerGrid = this.state.playerGrid;
-      return <WorldMap players={this.state.players}
-                       playerGrid={this.state.playerGrid} />;
-    }
-  };
+    return <WorldMap players={this.state.players}
+                     playerGrid={this.state.playerGrid} />;
+  }
 }

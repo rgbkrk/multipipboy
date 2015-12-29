@@ -33,6 +33,16 @@ export class PlayerModel {
       }
     }
 
+    batchUpdate(playerBatch) {
+      playerBatch.forEach(player => {
+        this.set(player.id, player);
+      });
+      return {
+        players: this.players,
+        playerGrid: this.playerGrid,
+      };
+    }
+
     get(id) {
       return this.players.get(id);
     }
