@@ -6,13 +6,13 @@ const path = require('path');
 
 const inDev = process.env.NODE_ENV !== 'production';
 
-let plugins = [];
+const plugins = [];
 if (inDev) {
-  plugins = [
+  plugins.push(
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin(),
-  ];
+    new webpack.NoErrorsPlugin()
+  );
 }
 
 module.exports = {
