@@ -1,6 +1,19 @@
 /* eslint no-path-concat: 0 */
+'use strict';
 
 const webpack = require('webpack');
+
+let plugins = [];
+
+const inDev = process.env.NODE_ENV !== 'production';
+
+if (inDev) {
+  plugins = [
+    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoErrorsPlugin(),
+  ];
+}
 
 module.exports = {
   entry: [
@@ -11,7 +24,7 @@ module.exports = {
     loaders: [{
       test: /\.jsx?$/,
       exclude: /node_modules/,
-      loader: 'react-hot!babel',
+      loader: inDev ? 'react-hot!babel' : 'babel',
     }, {
       test: /\.css$/,
       loader: 'style!css!autoprefixer?browsers=last 2 versions',
@@ -28,13 +41,5 @@ module.exports = {
     publicPath: '/',
     filename: 'bundle.js',
   },
-  devServer: {
-    contentBase: './dist',
-    hot: true,
-  },
-  plugins: [
-    new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin(),
-  ],
+  plugins,
 };
