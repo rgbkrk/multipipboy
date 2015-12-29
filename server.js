@@ -10,19 +10,21 @@ const webpackConfig = require('./webpack.config');
 const compiler = webpack(webpackConfig);
 
 const app = express();
-app.use(require('webpack-dev-middleware')(compiler, {
-  noInfo: true,
-  publicPath: webpackConfig.output.publicPath,
-}));
-app.use(require('webpack-hot-middleware')(compiler));
+
+if (process.env.NODE_ENV !== 'production') {
+  app.use(require('webpack-dev-middleware')(compiler, {
+    noInfo: true,
+    publicPath: webpackConfig.output.publicPath,
+  }));
+  app.use(require('webpack-hot-middleware')(compiler));
+}
 
 app.use(express.static('dist'));
 
 const server = new http.Server(app);
 const io = require('socket.io')(server);
 
-const fakes = require('./demo-server/fake-events');
-
+const fakes = require('./fake');
 const fakePlayerBatch = fakes.generatePlayerData()
   .bufferWithTime(10);
 

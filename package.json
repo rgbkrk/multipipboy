@@ -57,7 +57,11 @@
     "test": "mocha --compilers js:babel-core/register --require ./test/test_helper.js 'test/**/*.@(js|jsx)'",
     "test:watch": "npm run test -- --watch --watch-extensions jsx",
     "lint": "eslint .",
-    "live": "babel-node server.js"
+    "build": "webpack",
+    "dev": "npm run start",
+    "start": "babel-node server.js",
+    "prestart:prod": "npm run build",
+    "start:prod": "NODE_ENV=production npm run start"
   },
   "repository": {
     "type": "git",
