@@ -1,12 +1,13 @@
-import Rx from 'rx';
+'use strict';
 
+const Rx = require('rx');
 const uuid = require('node-uuid');
 
 const mapSize = 2048;
 const codsworthNames = require('codsworth-names');
 const adjectives = require('./adjectives');
 
-export function newPlayer(name) {
+function newPlayer(name) {
   const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
   return {
     name: `${adjective} ${name}`,
@@ -17,7 +18,7 @@ export function newPlayer(name) {
 }
 
 // Random walk -1, 0, 1
-export function walk(pt) {
+function walk(pt) {
   const change = Math.cos(Math.PI * Math.round(Math.random())) // -1 or 1
                  * Math.round(Math.random()); // 0 or 1
   const newPt = pt + change;
@@ -27,7 +28,7 @@ export function walk(pt) {
   return newPt;
 }
 
-export function generatePlayerData() {
+function generatePlayerData() {
   const gameState = {
     players: codsworthNames.map(newPlayer),
   };
@@ -46,3 +47,7 @@ export function generatePlayerData() {
   });
   return fakeEvents;
 }
+
+module.exports = {
+  generatePlayerData,
+};

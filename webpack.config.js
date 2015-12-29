@@ -2,6 +2,7 @@
 'use strict';
 
 const webpack = require('webpack');
+const path = require('path');
 
 const inDev = process.env.NODE_ENV !== 'production';
 
@@ -17,8 +18,9 @@ if (inDev) {
 module.exports = {
   entry: [
     'webpack-hot-middleware/client',
-    './src/index.jsx',
+    './index.jsx',
   ],
+  context: path.join(__dirname, 'src'),
   module: {
     loaders: [{
       test: /\.jsx?$/,
