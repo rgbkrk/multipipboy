@@ -1,5 +1,3 @@
-'use strict';
-
 const Rx = require('rx');
 const uuid = require('node-uuid');
 
