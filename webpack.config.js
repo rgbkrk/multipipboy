@@ -3,10 +3,9 @@
 
 const webpack = require('webpack');
 
-let plugins = [];
-
 const inDev = process.env.NODE_ENV !== 'production';
 
+let plugins = [];
 if (inDev) {
   plugins = [
     new webpack.optimize.OccurenceOrderPlugin(),
