@@ -27,15 +27,19 @@ app.use(express.static('dist'));
 
 // Our API
 const APIv1 = api.v1();
-app.use('/api/v1', APIv1);
+app.use('/api/v1', APIv1.router);
+const playerStream = APIv1.playerStream.filter(player => {
+  return (
+    player.x && player.x >= 0 && player.x <= 2048 &&
+    player.y && player.y >= 0 && player.y <= 2048 &&
+    player.name
+  );
+});
+const playerBatch = playerStream.bufferWithTime(10).filter(x => x.length > 0);
 
 // socket.io events
 const server = new http.Server(app);
 const io = require('socket.io')(server);
-
-const fakes = require('../fake');
-const fakePlayerBatch = fakes.generatePlayerData()
-  .bufferWithTime(10);
 
 const PORT = process.env.PORT || 8080;
 const UID = process.env.MAPPY_SERVER_UID || uuid.v4();
@@ -49,7 +53,8 @@ io.on('connection', (socket) => {
   const ip = forwarded(req, req.headers);
   debug('client ip %s', ip);
 
-  fakePlayerBatch.subscribe((playerbatch) => {
+  playerBatch.subscribe((playerbatch) => {
+    console.log(playerbatch[0].name);
     socket.emit('mappy:playerbatch', playerbatch);
   });
 });

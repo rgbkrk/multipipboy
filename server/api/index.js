@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 
 const v1 = function v1() {
   const api = new express.Router();
-  const playerStream = new Rx.BehaviorSubject();
+  const playerStream = new Rx.Subject();
 
   api.use(bodyParser.json());
 
@@ -33,11 +33,16 @@ const v1 = function v1() {
         err: 'Player data needs name, x, and y in JSON',
       });
     }
-    playerStream.onNext(req.body);
+    console.log(player);
+    player.id = req.params.id;
+    playerStream.onNext(player);
     resp.sendStatus(200);
   });
 
-  return api;
+  return {
+    router: api,
+    playerStream,
+  };
 };
 
 module.exports = {
