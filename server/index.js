@@ -7,9 +7,12 @@ const express = require('express');
 
 const app = express();
 
+const api = require('./api');
+
+// Hot Module Replacement enabled when not in production
 if (process.env.NODE_ENV !== 'production') {
   const webpack = require('webpack');
-  const webpackConfig = require('./webpack.config');
+  const webpackConfig = require('../webpack.config');
   const compiler = webpack(webpackConfig);
 
   app.use(require('webpack-dev-middleware')(compiler, {
@@ -19,12 +22,18 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(require('webpack-hot-middleware')(compiler));
 }
 
+// Static assets at /dist
 app.use(express.static('dist'));
 
+// Our API
+const APIv1 = api.v1();
+app.use('/api/v1', APIv1);
+
+// socket.io events
 const server = new http.Server(app);
 const io = require('socket.io')(server);
 
-const fakes = require('./fake');
+const fakes = require('../fake');
 const fakePlayerBatch = fakes.generatePlayerData()
   .bufferWithTime(10);
 

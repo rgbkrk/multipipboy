@@ -4,6 +4,7 @@
   "description": "Multiplayer map for the pip boy",
   "main": "index.js",
   "dependencies": {
+    "body-parser": "^1.14.2",
     "codsworth-names": "^1.0.1",
     "color": "^0.10.1",
     "debug": "^2.2.0",
@@ -58,7 +59,7 @@
     "build": "webpack",
     "dev": "npm run start",
     "prod": "npm run start:prod",
-    "start": "node server.js",
+    "start": "node server",
     "prestart:prod": "npm run build",
     "start:prod": "NODE_ENV=production npm run start"
   },
