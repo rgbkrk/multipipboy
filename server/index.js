@@ -28,13 +28,7 @@ app.use(express.static('dist'));
 // Our API
 const APIv1 = api.v1();
 app.use('/api/v1', APIv1.router);
-const playerStream = APIv1.playerStream.filter(player => {
-  return (
-    player.x && player.x >= 0 && player.x <= 2048 &&
-    player.y && player.y >= 0 && player.y <= 2048 &&
-    player.name
-  );
-});
+const playerStream = APIv1.playerStream;
 const playerBatch = playerStream.bufferWithTime(10).filter(x => x.length > 0);
 
 // socket.io events
@@ -54,7 +48,6 @@ io.on('connection', (socket) => {
   debug('client ip %s', ip);
 
   playerBatch.subscribe((playerbatch) => {
-    console.log(playerbatch[0].name);
     socket.emit('mappy:playerbatch', playerbatch);
   });
 });

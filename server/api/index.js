@@ -27,14 +27,35 @@ const v1 = function v1() {
         err: 'Content-Type must be set to application/json',
       });
     }
-    const player = req.body;
-    if (!player.name || !player.x || !player.y) {
+    const db = req.body;
+    if (!db.Map || !db.Map.World || !db.Map.World.Extents ||
+        !db.Map.World.Player) {
       return resp.status(400).json({
-        err: 'Player data needs name, x, and y in JSON',
+        err: 'Player data needs Map.World.Extents and Map.World.Player in JSON',
       });
     }
-    console.log(player);
+    const player = {};
+
     player.id = req.params.id;
+
+    const worldMapSize = 2048;
+    const worldX = db.Map.World.Player.X;
+    const worldY = db.Map.World.Player.X;
+
+    const extentsMinX = db.Map.World.Extents.NWX;
+    const extentsMaxX = db.Map.World.Extents.NEX;
+
+    const extentsMinY = db.Map.World.Extents.SWY;
+    const extentsMaxY = db.Map.World.Extents.NWY;
+
+    const scaledX = (worldX - extentsMinX) / (extentsMaxX - extentsMinX);
+    const scaledY = 1.0 - (worldY - extentsMinY) / (extentsMaxY - extentsMinY);
+
+    player.x = Math.round(scaledX * worldMapSize);
+    player.y = Math.round(scaledY * worldMapSize);
+
+    player.name = db.PlayerInfo.PlayerName;
+
     playerStream.onNext(player);
     resp.sendStatus(200);
   });
